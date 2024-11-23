@@ -33,6 +33,6 @@
 
 # others
 bin/
-*.tara
+*.emi
 /ignore
 /.vscode
