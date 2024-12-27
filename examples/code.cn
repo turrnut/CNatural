@@ -1,0 +1,9 @@
+int addThree(int one, int two, int three) {
+    return one + two + three;
+}
+
+void main() {
+    printf("%i\n", addThree(10,10,10));
+}
+
+
