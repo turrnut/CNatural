@@ -1,7 +1,7 @@
 
 # The C♮ Programming Language
 
-![C♮ Logo](icon/CNatural.png)
+<img src="icon/CNatural.png" width="100" align="center">
 
 The C♮(<i>Pronounced: C Natural</i>) programming language is a modern C-like language with a minimal compiler and a C inspired syntax. C♮ compiles to native machine code, but it needs the help of a C compiler to do that. <br>
 **Build**<br>
