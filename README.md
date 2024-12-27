@@ -6,7 +6,7 @@
 The C♮(<i>Pronounced: C Natural</i>) programming language is a modern C-like language with a minimal compiler and a C inspired syntax. C♮ compiles to native machine code, but it needs the help of a C compiler to do that. <br>
 **Build**<br>
 Clone this repository, and compile `cnc.c` into an executable called `cnc`, using a C compiler of your choice.<br>
-**Hello World**
+**Hello World**<br>
 Create a file called `hello.cn` and write:
 ```cn
 void main() {
