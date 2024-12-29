@@ -367,7 +367,7 @@ void convertC(Token* tokens, int tokenCount) {
 char* readFile(const char* path) {
   FILE* file = fopen(path, "rb");
 
-  fseek(file, 0L, SEEK_END);
+  fseek(file, 0, SEEK_END);
   size_t fileSize = ftell(file);
   rewind(file);
 
