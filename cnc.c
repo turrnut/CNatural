@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -400,8 +399,8 @@ int main(int argc, char const *argv[]) {
         return 1;
     }
 
-    if (argv[2] == NULL) {
-        printf("Usage: cnc [c-compiler] [file-name]");
+    if (argv[1] == NULL || argv[2] == NULL) {
+        printf("Usage: %s [c-compiler] [file-name]\n", argv[0]);
         return 1;
     }
 
