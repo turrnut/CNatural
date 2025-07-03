@@ -120,14 +120,20 @@ Token* lexer(const char *input, int *tokenCount) {
             int i = 0;
             cursor++; // Skip opening quote
             while (*cursor != '"' && *cursor != '\0') {
-                token.value[i++] = *cursor;
-                cursor++;
+                if (*cursor == '\\' && *(cursor + 1) != '\0') {
+                    // Handle escape sequence
+                    token.value[i++] = *cursor++; // Copy backslash
+                    token.value[i++] = *cursor++; // Copy escaped character
+                } else {
+                    token.value[i++] = *cursor++;
+                }
             }
             token.value[i] = '\0';
             if (*cursor == '"') {
                 cursor++; // Skip closing quote
             }
         }
+
         // Check for operators
         else if (strchr("+-*/", *cursor)) {
             token.type = TOKEN_OPERATOR;
@@ -364,18 +370,28 @@ void convertC(Token* tokens, int tokenCount) {
 
 // Function to read the contents of a file
 char* readFile(const char* path) {
-  FILE* file = fopen(path, "rb");
+    FILE* file = fopen(path, "rb");
+    if (file == NULL) {
+        printf("Error: Could not open file %s for reading.\n", path);
+        return NULL;
+    }
 
-  fseek(file, 0, SEEK_END);
-  size_t fileSize = ftell(file);
-  rewind(file);
+    fseek(file, 0, SEEK_END);
+    size_t fileSize = ftell(file);
+    rewind(file);
 
-  char* buffer = (char*)malloc(fileSize + 1);
-  size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
-  buffer[bytesRead] = '\0';
+    char* buffer = (char*)malloc(fileSize + 1);
+    if (buffer == NULL) {
+        printf("Error: Memory allocation failed while reading file.\n");
+        fclose(file);
+        return NULL;
+    }
 
-  fclose(file);
-  return buffer;
+    size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
+    buffer[bytesRead] = '\0';
+
+    fclose(file);
+    return buffer;
 }
 
 // Function to write a string to a file
@@ -432,7 +448,11 @@ int main(int argc, char const *argv[]) {
 
     writeFile(out, includesList);
     // printf(strcat(strcat((char*)argv[1] ," "), out));
-    int result = system(strcat(strcat((char*)argv[1] ," "), out));
+    // Build compiler command safely
+    char compileCmd[512]; // You can increase the size if needed
+    snprintf(compileCmd, sizeof(compileCmd), "%s %s", argv[1], out);
+
+    int result = system(compileCmd);
 
     if (result == 0){
         remove(out);
