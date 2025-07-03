@@ -26,6 +26,8 @@ typedef struct {
     char value[256];
 } Token;
 
+int tok_string_detected = 0;
+
 // Lexer function that takes input string and returns an array of tokens
 Token* lexer(const char *input, int *tokenCount) {
     const char *cursor = input;
@@ -153,14 +155,23 @@ Token* lexer(const char *input, int *tokenCount) {
         }
         // Check for identifiers
         else if (isalpha(*cursor)) {
-            token.type = TOKEN_IDENTIFIER;
             int i = 0;
+            char temp[256];
             while (isalnum(*cursor)) {
-                token.value[i++] = *cursor;
+                temp[i++] = *cursor;
                 cursor++;
             }
-            token.value[i] = '\0';
+            temp[i] = '\0';
+
+            if (strcmp(temp, "string") == 0) {
+                token.type = TOKEN_IDENTIFIER;
+                strcpy(token.value, "string");
+            } else {
+                token.type = TOKEN_IDENTIFIER;
+                strcpy(token.value, temp);
+            }
         }
+
         // Unknown token
         else {
             token.type = TOKEN_UNKNOWN;
@@ -246,12 +257,22 @@ void tok_id(char* value, Token* tokens, int current_idx) {
         appendMain("int main ");
         currentStatus = IN_MAIN;
         return;
+    } else if (strcmp(value, "string") == 0) {
+        // Convert `string` to `char`, remember to add [] after next identifier
+        appendMain("char ");
+        tok_string_detected = 1;
+        return;
     } else {
         appendMain(value);
     }
 
     if (currentStatus != IN_MAIN) {
         currentStatus = DEFAULT;
+    }
+
+    if (tok_string_detected) {
+        appendMain("[]");
+        tok_string_detected = 0;
     }
 
     appendMain(" ");
